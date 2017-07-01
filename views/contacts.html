@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+          $.ajax({
+                type: "GET",
+                url: "http://localhost:3000/contacts",
+                dataType: 'json',
+                success: function(data) {
+                        var dataArray = data;
+                        var trHTML = '';
+                        $.each(data.Items, function (i, item) {
+                            //trHTML += '<tr><td>' + data.Items[i].EnteredId + '</td><td>' + data.Items[i].Uri + '</td></tr>';
+                            trHTML += '<tr><td>' + data.Items[i].EnteredId + '</td><td><a target="_blank" href="http://localhost:3000/contacts/'+data.Items[i].EnteredId+'">'+data.Items[i].EnteredId+'</a></td><td><a href="http://localhost:3000/contacts/'+data.Items[i].EnteredId+'" class="btn btn-danger" id="'+data.Items[i].EnteredId+'" onclick="myFunction('+data.Items[i].EnteredId+')">Delete</a></td></tr>';
+                        });
+                        $('#contactsTable').append(trHTML);
+                }
+          });
+  });
+</script>
+<script type="text/javascript">
+    function myFunction(id) {
+      event.preventDefault();
+      console.log("Delete Request triggered"+id);
+      $(document).ready(function(){
+              $.ajax({
+                    type: "DELETE",
+                    url: id,
+                    success: function(data){
+                      console.log("success");
+                      location.reload();
+                  }
+              });
+      });
+      $(document).ajaxStop(function(){
+          window.location.reload();
+      });
+    }
+</script>
+<title>Customer Contacts</title>
+</head>
+<body>
+    List of contacts: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a target="_blank" href="http://localhost:3000/cre">Create Contact</a>
+    <br/>
+    <table id="contactsTable" border='1'>
+      <tr>
+          <th>Contact Name</th>
+           <th>url</th>
+           <th>Delete</th>
+      </tr>
+    </table>
+</body>
+</html>
